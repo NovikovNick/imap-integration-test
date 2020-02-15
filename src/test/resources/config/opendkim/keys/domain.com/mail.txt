@@ -1,0 +1,3 @@
+mail._domainkey	IN	TXT	( "v=DKIM1; h=sha256; k=rsa; "
+	  "p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyh5pDynMDsBO+oyCJd6G5G+gbiXXzmtueN9+vCxBDHRCywzdCk2CplYT6IUqIJCMfSZm6gWYo8H3rxqVD4JnzOdT5LuEajBJ7kEcPcR8mnAygerBmGpP3uxW0mKUtbNGWpP5XEFRwrG/bQhbRWNWGVPbnI4pCvmYKABAvgKU8HerJBC/CthENgN8mexDPf9hZIfTU5Ly4KD8I/"
+	  "AjQ7/bnyYCyBQEAgChQSDWj7FpcUJiLu4UEuEEmrXLSnRsSA4UL395Jbizbc6iSfv/gCdsc1J7QiYrE2k01kux27OATX1eGo5/UHxAelvIbhMImZIug+zBkToSEmFUmDdoxSIN+QIDAQAB" )  ; ----- DKIM key mail for domain.com

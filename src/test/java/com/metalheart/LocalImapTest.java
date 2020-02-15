@@ -2,8 +2,10 @@ package com.metalheart;
 
 import com.metalheart.model.Mail;
 import com.metalheart.service.MailService;
+import com.metalheart.testcontainer.MailServerDockerComposeContainer;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
+import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import org.springframework.messaging.PollableChannel;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.testcontainers.containers.DockerComposeContainer;
 
 import static com.metalheart.AppConfiguration.MAIL_CHANNEL;
 
@@ -23,6 +26,9 @@ import static com.metalheart.AppConfiguration.MAIL_CHANNEL;
 @ActiveProfiles("test")
 @ContextConfiguration(classes = TestConfiguration.class)
 public class LocalImapTest {
+
+    @ClassRule
+    public static DockerComposeContainer ENVIRONMENT = MailServerDockerComposeContainer.getInstance();
 
     @Autowired
     private MailService mailService;
