@@ -20,7 +20,7 @@ public class MailService {
     @Autowired
     private JavaMailSenderImpl sender;
 
-    public void send(String to, String subject, String content) {
+    public String send(String to, String subject, String content) {
 
         Session session = sender.getSession();
         try (ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -45,6 +45,8 @@ public class MailService {
             String messageID = message.getMessageID();
 
             log.info("Send email " + messageID);
+
+            return messageID;
 
         } catch (RuntimeException e) {
             throw e;

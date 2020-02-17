@@ -11,20 +11,6 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 @Slf4j
 @Configuration
 public class TestConfiguration {
-    @Bean
-    @Primary
-    public AppProperties appProperties() {
-        AppProperties props = new AppProperties();
-        props.setUsername("user@domain.com");
-        props.setPassword("password");
-        props.setProtocol("imap");
-
-        props.setHost(MailServerDockerComposeContainer.getContainerIp());
-        props.setPort(MailServerDockerComposeContainer.getImapPort());
-
-        props.setFolder("inbox");
-        return props;
-    }
 
     @Bean
     @Primary
