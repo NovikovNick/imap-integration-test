@@ -1,7 +1,7 @@
-package com.metalheart.integration.transformer;
+package com.metalheart.converter;
+
 
 import com.metalheart.model.Mail;
-import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import javax.mail.Address;
@@ -10,7 +10,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.integration.transformer.GenericTransformer;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 import static java.util.Collections.emptyList;
@@ -19,21 +19,23 @@ import static org.springframework.util.CollectionUtils.arrayToList;
 
 @Slf4j
 @Component
-public class MimeMessageToMailTransformer implements GenericTransformer<MimeMessage, Mail> {
+public class MimeMessageToMailConverter implements Converter<MimeMessage, Mail> {
 
     @Override
-    public Mail transform(MimeMessage src) {
-
+    public Mail convert(MimeMessage src) {
         Mail dst = new Mail();
 
         try {
+
+            dst.setMessageId(src.getMessageID());
+            dst.setSize(src.getSize());
+
             dst.setFrom(convert(src.getFrom()));
             dst.setTo(convert(src.getRecipients(Message.RecipientType.TO)));
 
             dst.setSubject(src.getSubject());
-            dst.setPlainText(src.getContent() + "");
 
-        } catch (IOException | MessagingException e) {
+        } catch (MessagingException e) {
             log.error(e.getMessage(), e);
         }
 
@@ -57,7 +59,7 @@ public class MimeMessageToMailTransformer implements GenericTransformer<MimeMess
             .collect(toList());
     }
 
-    public static String getAddress(Address address) {
+    private static String getAddress(Address address) {
         return address instanceof InternetAddress ? ((InternetAddress) address).getAddress() : address.toString();
     }
 }

@@ -1,6 +1,6 @@
 package com.metalheart.service;
 
-import com.metalheart.integration.transformer.MimeMessageToMailTransformer;
+import com.metalheart.converter.MimeMessageToMailConverter;
 import com.metalheart.model.IMAPConnectionData;
 import com.sun.mail.imap.IMAPFolder;
 import java.util.Properties;
@@ -8,6 +8,7 @@ import java.util.concurrent.TimeUnit;
 import javax.mail.Flags;
 import javax.mail.Session;
 import javax.mail.Store;
+import javax.mail.internet.MimeMessage;
 import javax.mail.search.FlagTerm;
 import javax.mail.search.NotTerm;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +30,7 @@ public class IMAPService {
     private IntegrationFlowContext flowContext;
 
     @Autowired
-    private MimeMessageToMailTransformer mimeMessageToMail;
+    MimeMessageToMailConverter converter;
 
 
     public IMAPFolder getFolder(IMAPConnectionData data) {
@@ -69,7 +70,7 @@ public class IMAPService {
         Properties props = new Properties();
         props.put("mail.debug", "true");
 
-        ImapMailReceiver receiver = new ImapMailReceiver(data.getConnectionUrl());
+        ImapMailReceiver receiver = new ImapMailReceiver(data.toUrl());
         receiver.setJavaMailProperties(props);
         receiver.setShouldDeleteMessages(false);
         receiver.setShouldMarkMessagesAsRead(true);
@@ -77,7 +78,7 @@ public class IMAPService {
         receiver.setSearchTermStrategy((s, f) -> new NotTerm(new FlagTerm(new Flags(Flags.Flag.SEEN), true)));
 
         StandardIntegrationFlow integrationFlow = IntegrationFlows.from(Mail.imapIdleAdapter(receiver))
-            .transform(mimeMessageToMail)
+            .<MimeMessage, com.metalheart.model.Mail>transform(m -> converter.convert(m))
             .handle((m, h) -> {
                 try {
                     TimeUnit.SECONDS.sleep(3);

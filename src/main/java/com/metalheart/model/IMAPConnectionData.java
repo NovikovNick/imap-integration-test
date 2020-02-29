@@ -20,7 +20,7 @@ public class IMAPConnectionData {
 
     private String folder;
 
-    public String getConnectionUrl() {
+    public String toUrl() {
 
         String login = URLEncoder.encode(username, UTF_8);
         String pass = URLEncoder.encode(password, UTF_8);

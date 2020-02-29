@@ -15,12 +15,48 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Slf4j
 @Component
-public class MailService {
+public class SMTPService {
 
     @Autowired
     private JavaMailSenderImpl sender;
 
     public String send(String to, String subject, String content) {
+
+        Session session = sender.getSession();
+        try (ByteArrayOutputStream os = new ByteArrayOutputStream();
+             PrintStream ps = new PrintStream(os, true, UTF_8)) {
+
+            session.setDebugOut(ps);
+            //session.setDebug(true);
+
+            MimeMessage message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(sender.getUsername()));
+            message.setRecipients(Message.RecipientType.TO, to);
+            message.setSubject(subject);
+            message.setText(content);
+
+            try {
+                sender.send(message);
+            } catch (Exception e) {
+                log.error("Unable to send email. SMTP log: \n\n" + os.toString(UTF_8), e.getMessage(), e);
+                throw new RuntimeException(e);
+            }
+
+            String messageID = message.getMessageID();
+
+            log.info("Send email " + messageID);
+
+            return messageID;
+
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    public String send(String to, String subject, Integer count) {
 
         Session session = sender.getSession();
         try (ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -33,10 +69,14 @@ public class MailService {
             message.setFrom(new InternetAddress(sender.getUsername()));
             message.setRecipients(Message.RecipientType.TO, to);
             message.setSubject(subject);
-            message.setText(content);
+
 
             try {
-                sender.send(message);
+
+                for (int i = 0; i < count; i++) {
+                    message.setText("test_" + count);
+                    sender.send(message);
+                }
             } catch (Exception e) {
                 log.error("Unable to send email. SMTP log: \n\n" + os.toString(UTF_8), e.getMessage(), e);
                 throw new RuntimeException(e);

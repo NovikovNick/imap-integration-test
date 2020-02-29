@@ -12,7 +12,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 @Configuration
 public class TestConfiguration {
 
-    @Bean
+    /*@Bean
     @Primary
     public JavaMailSenderImpl getSender() {
 
@@ -21,8 +21,8 @@ public class TestConfiguration {
         javaMailSender.setUsername("user@domain.com");
         javaMailSender.setPassword("password");
 
-        javaMailSender.setHost(MailServerDockerComposeContainer.getContainerIp());
-        javaMailSender.setPort(MailServerDockerComposeContainer.getSmtpPort());
+        //javaMailSender.setHost(MailServerDockerComposeContainer.getContainerIp());
+        //javaMailSender.setPort(MailServerDockerComposeContainer.getSmtpPort());
 
         Properties props = new Properties();
         props.put("mail.smtp.auth", true);
@@ -31,5 +31,26 @@ public class TestConfiguration {
         javaMailSender.setJavaMailProperties(props);
 
         return javaMailSender;
+    }*/
+
+    @Bean
+    @Primary
+    public JavaMailSenderImpl getSender() {
+
+        JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
+        javaMailSender.setProtocol("smtp");
+        javaMailSender.setUsername("metalheart.bot1@gmail.com");
+        //javaMailSender.setPassword
+
+        javaMailSender.setHost("smtp.gmail.com");
+        javaMailSender.setPort(587);
+
+        Properties props = new Properties();
+        props.put("mail.smtp.auth", true);
+        props.put("mail.smtp.starttls.enable", true);
+        javaMailSender.setJavaMailProperties(props);
+
+        return javaMailSender;
     }
+
 }
