@@ -125,7 +125,7 @@ public class IMAPConnectionService {
         props.put("mail.store.protocol", protocol);
         props.put("mail.imap.timeout", 5000);
         props.put("mail.imap.connectiontimeout", 5000);
-        props.put("mail.imap.ssl.enable", "true");
+        props.put("mail.imap.ssl.enable", "false");
 
         try {
 

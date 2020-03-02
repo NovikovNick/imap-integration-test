@@ -104,7 +104,7 @@ public class LocalImapTest {
 
         TimeUnit.SECONDS.sleep(2);
 
-        imapConnectionService.start(getConnectionRealData());
+        imapConnectionService.start(getConnectionData());
 
         //mailService.send("metalheart.bot1@gmail.com", "test3", 1000);
 
@@ -123,8 +123,8 @@ public class LocalImapTest {
         data.setUsername("user@domain.com");
         data.setPassword("password");
         data.setProtocol("imap");
-        data.setHost(MailServerDockerComposeContainer.getContainerIp());
-        data.setPort(MailServerDockerComposeContainer.getImapPort());
+        data.setHost("localhost");
+        data.setPort(143);
         data.setFolder("inbox");
         return data;
     }
